@@ -1,0 +1,44 @@
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(26,26,24,.5); z-index: 300;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+
+.modal {
+  background: var(--surface); border-radius: var(--radius-xl); padding: 40px;
+  max-width: 420px; width: 100%; position: relative;
+  transform: translateY(20px) scale(.97);
+  transition: transform .4s var(--ease-out); box-shadow: var(--shadow-xl);
+}
+.modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+.modal-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s; color: var(--text);
+}
+.modal-close:hover { background: var(--surface-dim); }
+
+.modal-icon {
+  width: 56px; height: 56px; border-radius: var(--radius-lg);
+  background: var(--accent-light); display: flex; align-items: center;
+  justify-content: center; margin-bottom: 20px; font-size: 1.5rem;
+}
+.modal h2 { font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 8px; }
+.modal p { color: var(--text-secondary); font-size: .875rem; margin-bottom: 28px; line-height: 1.6; }
+
+.form-phone { display: flex; gap: 8px; }
+.phone-prefix { width: 72px; flex-shrink: 0; text-align: center; font-weight: 600; }
+
+.otp-inputs { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; }
+.otp-input {
+  width: 50px; height: 56px; text-align: center; font-size: 1.25rem; font-weight: 700;
+  border: 1.5px solid var(--border); border-radius: var(--radius-md);
+  background: var(--bg); transition: all .25s;
+}
+.otp-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+
+.otp-resend { text-align: center; margin-top: 16px; font-size: .8125rem; color: var(--text-muted); }
+.otp-resend button { color: var(--accent); font-weight: 600; text-decoration: underline; background: none; border: none; cursor: pointer; }

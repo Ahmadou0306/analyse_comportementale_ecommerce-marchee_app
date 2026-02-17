@@ -1,0 +1,7 @@
+.admin-layout { display: flex; min-height: 100vh; background: var(--bg); }
+.admin-main { flex: 1; padding: 32px 40px; overflow-y: auto; min-height: 100vh; }
+
+@media (max-width: 768px) {
+  .admin-layout { flex-direction: column; }
+  .admin-main { padding: 20px 16px; padding-bottom: 80px; }
+}

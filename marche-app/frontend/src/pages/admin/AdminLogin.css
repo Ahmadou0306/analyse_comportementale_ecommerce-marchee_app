@@ -1,0 +1,31 @@
+.admin-login-page {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 24px; background: var(--bg);
+}
+.admin-login-card {
+  background: var(--surface); border-radius: var(--radius-xl);
+  padding: 48px 40px; max-width: 420px; width: 100%;
+  box-shadow: var(--shadow-xl); text-align: center;
+}
+.admin-login-icon {
+  width: 64px; height: 64px; border-radius: var(--radius-lg);
+  background: var(--accent-light); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+}
+.admin-login-brand {
+  font-family: var(--font-display); font-size: 1.75rem; margin-bottom: 4px;
+}
+.admin-login-brand span { color: var(--coral); }
+.admin-login-sub {
+  font-size: .8125rem; color: var(--text-muted); margin-bottom: 32px;
+  text-transform: uppercase; letter-spacing: .06em; font-weight: 600;
+}
+.admin-login-error {
+  color: var(--coral); font-size: .8125rem; margin-bottom: 16px; font-weight: 500;
+}
+.admin-login-hint {
+  margin-top: 20px; font-size: .75rem; color: var(--text-muted); line-height: 1.6;
+}
+.admin-login-hint strong { color: var(--text-secondary); }
+.admin-login-card .form-group { text-align: left; }

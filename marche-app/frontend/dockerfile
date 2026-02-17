@@ -1,0 +1,19 @@
+# Dockerfile pour React + Vite Frontend
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copier les fichiers de dépendances en premier (cache Docker)
+COPY package*.json ./
+
+# Installer les dépendances
+RUN npm ci
+
+# Copier le code source
+COPY . .
+
+# Exposer le port Vite
+EXPOSE 5173
+
+# Lancer le dev server accessible depuis l'extérieur du container
+CMD ["npx", "vite", "--host", "0.0.0.0"]

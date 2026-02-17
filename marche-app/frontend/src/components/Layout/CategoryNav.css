@@ -1,0 +1,17 @@
+.cat-nav {
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg);
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.cat-nav::-webkit-scrollbar { display: none; }
+.cat-nav-inner { display: flex; gap: 2px; padding: 8px 0; min-width: max-content; }
+
+.cat-chip {
+  padding: 8px 18px; border-radius: var(--radius-xl);
+  font-size: .8125rem; font-weight: 500; color: var(--text-secondary);
+  white-space: nowrap; transition: all .25s var(--ease-out);
+  cursor: pointer; position: relative;
+}
+.cat-chip:hover { color: var(--text); background: var(--surface-dim); }
+.cat-chip.active { color: var(--accent-dark); background: var(--accent-light); font-weight: 600; }

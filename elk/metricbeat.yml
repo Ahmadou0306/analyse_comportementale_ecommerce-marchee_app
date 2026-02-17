@@ -1,0 +1,66 @@
+metricbeat.config.modules:
+  path: ${path.config}/modules.d/*.yml
+  reload.enabled: false
+
+metricbeat.modules:
+  # Monitoring Docker
+  - module: docker
+    metricsets:
+      - container
+      - cpu
+      - diskio
+      - memory
+      - network
+    hosts: ["unix:///var/run/docker.sock"]
+    period: 10s
+    enabled: true
+
+  # Monitoring système
+  - module: system
+    period: 10s
+    metricsets:
+      - cpu
+      - load
+      - memory
+      - network
+      - process
+      - process_summary
+    process.include_top_n:
+      by_cpu: 5
+      by_memory: 5
+
+  # Monitoring Elasticsearch
+  - module: elasticsearch
+    xpack.enabled: true
+    period: 10s
+    hosts: ["${ELASTIC_HOSTS}"]
+    username: "${ELASTIC_USER}"
+    password: "${ELASTIC_PASSWORD}"
+    ssl:
+      certificate_authorities: ["/usr/share/metricbeat/certs/ca/ca.crt"]
+
+  # Monitoring Kibana
+  - module: kibana
+    period: 10s
+    hosts: ["${KIBANA_HOSTS}"]
+    xpack.enabled: true
+
+  # Monitoring Logstash
+  - module: logstash
+    xpack.enabled: true
+    period: 10s
+    hosts: ["${LOGSTASH_HOSTS}"]
+
+output.elasticsearch:
+  hosts: ["${ELASTIC_HOSTS}"]
+  protocol: "https"
+  username: "${ELASTIC_USER}"
+  password: "${ELASTIC_PASSWORD}"
+  ssl:
+    certificate_authorities: ["/usr/share/metricbeat/certs/ca/ca.crt"]
+
+setup.kibana:
+  host: "${KIBANA_HOSTS}"
+
+logging.json: true
+logging.metrics.enabled: false

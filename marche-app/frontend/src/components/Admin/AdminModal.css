@@ -1,0 +1,27 @@
+.admin-modal-overlay {
+  position: fixed; inset: 0; background: rgba(26,26,24,.5); z-index: 300;
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+  animation: adminFadeIn .2s ease;
+}
+@keyframes adminFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.admin-modal {
+  background: var(--surface); border-radius: var(--radius-xl);
+  max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--shadow-xl); animation: adminSlideUp .3s var(--ease-out);
+}
+@keyframes adminSlideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.admin-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 28px 0;
+}
+.admin-modal-header h3 { font-family: var(--font-display); font-size: 1.25rem; }
+.admin-modal-close {
+  width: 36px; height: 36px; border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s; color: var(--text);
+}
+.admin-modal-close:hover { background: var(--surface-dim); }
+
+.admin-modal-body { padding: 24px 28px 28px; }

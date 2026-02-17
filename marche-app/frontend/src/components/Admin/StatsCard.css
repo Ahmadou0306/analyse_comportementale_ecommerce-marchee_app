@@ -1,0 +1,20 @@
+.stats-card {
+  background: var(--surface); border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg); padding: 24px;
+  display: flex; align-items: center; gap: 16px;
+  transition: all .3s var(--ease-out);
+}
+.stats-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: transparent; }
+
+.stats-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;
+}
+.stats-icon--accent { background: var(--accent-light); color: var(--accent); }
+.stats-icon--coral { background: var(--coral-light); color: var(--coral); }
+.stats-icon--sage { background: var(--sage-light); color: var(--sage); }
+.stats-icon--gold { background: var(--gold-light); color: #C9A458; }
+
+.stats-info { display: flex; flex-direction: column; }
+.stats-label { font-size: .75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+.stats-value { font-size: 1.5rem; font-weight: 700; color: var(--text); margin-top: 2px; }

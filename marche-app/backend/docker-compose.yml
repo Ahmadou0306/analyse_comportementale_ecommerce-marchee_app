@@ -1,0 +1,59 @@
+services:
+  # Base de données PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: marche_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: passer
+      POSTGRES_DB: marche_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - marche-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Express.js
+  backend:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: marche_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DATABASE_URL: postgresql://postgres:passer@db:5432/marche_db
+      JWT_SECRET: ${JWT_SECRET:-marche-secret-key-change-in-production}
+      OTP_DEFAULT_CODE: ${OTP_DEFAULT_CODE:-123456}
+      ADMIN_PHONE: ${ADMIN_PHONE:-810000000}
+      ADMIN_COUNTRY_CODE: ${ADMIN_COUNTRY_CODE:-+221}
+      ADMIN_FIRSTNAME: ${ADMIN_FIRSTNAME:-Admin}
+      ADMIN_LASTNAME: ${ADMIN_LASTNAME:-MARCHÉ}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@marche.cd}
+      CURRENCY: FCFA
+      ENABLE_SWAGGER: ${ENABLE_SWAGGER:-true}
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./images:/app/images
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - marche-network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  marche-network:
+    driver: bridge

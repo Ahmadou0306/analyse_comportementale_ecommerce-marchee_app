@@ -1,0 +1,35 @@
+.admin-categories-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;
+}
+
+.admin-cat-card {
+  background: var(--surface); border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg); padding: 24px;
+  display: flex; align-items: center; gap: 16px;
+  transition: all .3s var(--ease-out);
+}
+.admin-cat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: transparent; }
+
+.admin-cat-icon {
+  width: 52px; height: 52px; border-radius: var(--radius-md);
+  background: var(--surface-dim); display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; flex-shrink: 0;
+}
+.admin-cat-info { flex: 1; min-width: 0; }
+.admin-cat-info h3 { font-size: .9375rem; font-weight: 600; margin-bottom: 2px; }
+.admin-cat-slug { font-size: .6875rem; color: var(--text-muted); font-family: monospace; display: block; margin-bottom: 4px; }
+.admin-cat-count { font-size: .75rem; color: var(--text-secondary); }
+
+.admin-cat-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+.admin-emoji-suggestions {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;
+}
+.admin-emoji-suggestions button {
+  width: 38px; height: 38px; border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border); background: var(--bg);
+  font-size: 1.125rem; cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.admin-emoji-suggestions button:hover { border-color: var(--accent); background: var(--accent-light); }
+.admin-emoji-suggestions button.active { border-color: var(--accent); background: var(--accent-light); }
