@@ -39,6 +39,8 @@ services:
       ADMIN_LASTNAME: ${ADMIN_LASTNAME:-MARCHÉ}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@marche.cd}
       CURRENCY: FCFA
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      RATE_LIMIT_MAX: ${RATE_LIMIT_MAX:-200}
       ENABLE_SWAGGER: ${ENABLE_SWAGGER:-true}
     ports:
       - "5000:5000"
