@@ -1,19 +1,29 @@
 filebeat.inputs:
 
   # ----------------------─
-  # SOURCE : logs Docker de tous les conteneurs
-  # Filebeat lit automatiquement stdout/stderr
-  # de chaque conteneur via le socket Docker
+  # SOURCE : logs Docker uniquement des conteneurs app
+  # Filtre par label collect_logs=true
+  # Ignore ES, Kafka, Logstash, Metricbeat...
   # ----------------------─
   - type: container
     paths:
-      - /var/lib/docker/containers/*/*.log   # chemin standard des logs Docker
+      - /var/lib/docker/containers/*/*.log
 
-    # - Enrichissement automatique avec les métadonnées Docker -
-    # Ajoute : nom du conteneur, image, labels, etc.
     processors:
       - add_docker_metadata:
           host: "unix:///var/run/docker.sock"
+
+      # Supprime les événements qui ne viennent pas des conteneurs app
+      - drop_event:
+          when:
+            not:
+              or:
+                - contains:
+                    container.name: "marche_backend"
+                - contains:
+                    container.name: "marche_frontend"
+                - contains:
+                    container.name: "marche_postgres"
 
 # ----------------------─
 # ROUTING : envoie vers le bon topic Kafka
@@ -25,33 +35,23 @@ output.kafka:
     - "broker-2:19092"
     - "broker-3:19092"
 
-  # Si pas de label défini -> topic par défaut
   topics:
     - topic: "frontend-logs"
       when.contains:
-        container.name: "frontend"   # si le nom du conteneur contient "frontend"
+        container.name: "marche_frontend"
     - topic: "backend-logs"
       when.contains:
-        container.name: "backend"    # si le nom du conteneur contient "backend"
+        container.name: "marche_backend"
     - topic: "postgres-logs"
       when.contains:
-        container.name: "postgres" 
-    - topic: "app-logs" # topic par défaut pour tout le reste
+        container.name: "marche_postgres"
+    - topic: "app-logs"   # fallback
 
-  # - Fiabilité -
-  required_acks: 1          # attend confirmation d'au moins 1 broker
-  compression: gzip         # compresse les messages pour réduire la bande passante
+  required_acks: 1
+  compression: gzip
   max_message_bytes: 1000000
 
-# ----------------------─
-# REGISTRE : Filebeat mémorise où il en est
-# dans la lecture des logs pour ne pas
-# renvoyer les mêmes logs après redémarrage
-# ----------------------─
 filebeat.registry.path: /usr/share/filebeat/data/registry
 
-# ----------------------─
-# LOGS FILEBEAT lui-même
-# ----------------------─
 logging.level: info
-logging.to_files: false   # logs vers stdout pour Docker
+logging.to_files: false

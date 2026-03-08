@@ -5,3 +5,5 @@ MAKEFILE.md
 .env
 .vite
 !.gitkeep
+.claude
+claude
