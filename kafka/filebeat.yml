@@ -1,0 +1,52 @@
+filebeat.inputs:
+
+  # - Broker 1 -
+  - type: log
+    paths:
+      - /logs/broker-1/server.log
+      - /logs/broker-1/controller.log
+      - /logs/broker-1/state-change.log
+    fields:
+      kafka_broker: "broker-1"
+      log_type: "kafka"
+    fields_under_root: true
+
+  # - Broker 2 -
+  - type: log
+    paths:
+      - /logs/broker-2/server.log
+      - /logs/broker-2/controller.log
+      - /logs/broker-2/state-change.log
+    fields:
+      kafka_broker: "broker-2"
+      log_type: "kafka"
+    fields_under_root: true
+
+  # - Broker 3 -
+  - type: log
+    paths:
+      - /logs/broker-3/server.log
+      - /logs/broker-3/controller.log
+      - /logs/broker-3/state-change.log
+    fields:
+      kafka_broker: "broker-3"
+      log_type: "kafka"
+    fields_under_root: true
+
+# - Envoi direct vers Elasticsearch (bypass Kafka) -
+output.elasticsearch:
+  hosts:
+    - "https://es01:9200"
+  username: "elastic"
+  password: "${ELASTIC_PASSWORD}"
+  ssl.verification_mode: "none"
+
+  # Index dédié pour les logs Kafka
+  index: "logs-kafka-%{+yyyy.MM.dd}"
+
+setup.ilm.enabled: false
+setup.template.name: "logs-kafka"
+setup.template.pattern: "logs-kafka-*"
+
+filebeat.registry.path: /usr/share/filebeat/data/registry
+logging.level: info

@@ -1,0 +1,276 @@
+services:
+
+  # ----------------------─
+  # CONTROLLERS — Gestion du cluster KRaft
+  # Ne reçoivent pas de messages, gèrent uniquement
+  # les métadonnées et l'élection du leader
+  # 3 pour respect de bonnes pratiques
+  # ----------------------─
+  controller-1:
+    image: apache/kafka:latest
+    container_name: controller-1
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_LISTENERS: CONTROLLER://:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    networks:
+      - kafka-net
+
+  controller-2:
+    image: apache/kafka:latest
+    container_name: controller-2
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_LISTENERS: CONTROLLER://:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    networks:
+      - kafka-net
+
+  controller-3:
+    image: apache/kafka:latest
+    container_name: controller-3
+    environment:
+      KAFKA_NODE_ID: 3
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_LISTENERS: CONTROLLER://:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+    networks:
+      - kafka-net
+
+  # ----------------------─
+  # BROKERS — Reçoivent et stockent les messages
+  # ----------------------─
+  broker-1:
+    image: apache/kafka:latest
+    container_name: broker-1
+    ports:
+      - "29092:9092"      # accès depuis ta machine hôte
+    environment:
+      KAFKA_NODE_ID: 4
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: PLAINTEXT://:19092,PLAINTEXT_HOST://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-1:19092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+      # - Réplication -
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_NUM_PARTITIONS: 6
+
+      # - Rétention -
+      KAFKA_LOG_RETENTION_HOURS: 168          # 7 jours
+      KAFKA_LOG_RETENTION_BYTES: 1073741824   # 1 GB max par partition
+
+    depends_on:
+      - controller-1
+      - controller-2
+      - controller-3
+    volumes:
+      - broker-1-data:/var/lib/kafka/data
+      - broker-1-logs:/var/lib/kafka/logs
+    networks:
+      - kafka-net
+
+  broker-2:
+    image: apache/kafka:latest
+    container_name: broker-2
+    ports:
+      - "39092:9092"
+    environment:
+      KAFKA_NODE_ID: 5
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: PLAINTEXT://:19092,PLAINTEXT_HOST://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-2:19092,PLAINTEXT_HOST://localhost:39092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_NUM_PARTITIONS: 6
+
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_RETENTION_BYTES: 1073741824
+
+    depends_on:
+      - controller-1
+      - controller-2
+      - controller-3
+    volumes:
+      - broker-2-data:/var/lib/kafka/data
+      - broker-1-logs:/var/lib/kafka/logs
+    networks:
+      - kafka-net
+
+  broker-3:
+    image: apache/kafka:latest
+    container_name: broker-3
+    ports:
+      - "49092:9092"
+    environment:
+      KAFKA_NODE_ID: 6
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_LISTENERS: PLAINTEXT://:19092,PLAINTEXT_HOST://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-3:19092,PLAINTEXT_HOST://localhost:49092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@controller-1:9093,2@controller-2:9093,3@controller-3:9093
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_NUM_PARTITIONS: 6
+
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_RETENTION_BYTES: 1073741824
+
+    depends_on:
+      - controller-1
+      - controller-2
+      - controller-3
+    volumes:
+      - broker-3-data:/var/lib/kafka/data
+      - broker-3-logs:/var/lib/kafka/logs
+    networks:
+      - kafka-net
+  # ----------------------─
+  # KAFKA INIT — Initialisation du cluster kafka
+  # Permet la création des topics correspondant en précisant les partitions ainsi que les facteurs réplicat
+  # ----------------------─
+  kafka-init:
+    image: apache/kafka:latest
+    container_name: kafka-init
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+    command: >
+      bash -c '
+        echo ">>> Attente des brokers..."
+        sleep 15
+
+        echo ">>> Création des topics..."
+
+        /opt/kafka/bin/kafka-topics.sh --create \
+          --if-not-exists \
+          --bootstrap-server broker-1:19092 \
+          --topic frontend-logs \
+          --partitions 3 \
+          --replication-factor 3
+
+        /opt/kafka/bin/kafka-topics.sh --create \
+          --if-not-exists \
+          --bootstrap-server broker-1:19092 \
+          --topic backend-logs \
+          --partitions 6 \
+          --replication-factor 3
+
+        /opt/kafka/bin/kafka-topics.sh --create \
+          --if-not-exists \
+          --bootstrap-server broker-1:19092 \
+          --topic postgres-logs \
+          --partitions 3 \
+          --replication-factor 3
+
+        /opt/kafka/bin/kafka-topics.sh --create \
+          --if-not-exists \
+          --bootstrap-server broker-1:19092 \
+          --topic transactions \
+          --partitions 3 \
+          --replication-factor 3
+
+        /opt/kafka/bin/kafka-topics.sh --create \
+          --if-not-exists \
+          --bootstrap-server broker-1:19092 \
+          --topic metrics \
+          --partitions 3 \
+          --replication-factor 3
+
+        echo ">>> Topics créés"
+        kafka-topics.sh --list --bootstrap-server broker-1:19092
+      '
+    networks:
+      - kafka-net
+  # ----------------------─
+  # KAFKA UI — Interface graphique
+  # Accessible sur http://localhost:8080
+  # ----------------------─
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: broker-1:19092,broker-2:19092,broker-3:19092
+      # - Authentification basique sur l'interface -
+      AUTH_TYPE: "LOGIN_FORM"
+      SPRING_SECURITY_USER_NAME: ${KAFKA_UI_USER}
+      SPRING_SECURITY_USER_PASSWORD: ${KAFKA_UI_PASSWORD}
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+    networks:
+      - kafka-net
+  filebeat-kafka:
+    image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
+    container_name: filebeat-kafka
+    user: root
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}   
+    command: >
+      bash -c "
+        cp /usr/share/filebeat/filebeat.yml /tmp/filebeat.yml &&
+        chmod go-w /tmp/filebeat.yml &&
+        filebeat -e -c /tmp/filebeat.yml
+      "
+    volumes:
+      - broker-1-logs:/logs/broker-1:ro
+      - broker-2-logs:/logs/broker-2:ro
+      - broker-3-logs:/logs/broker-3:ro
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+    networks:
+      - elk-net
+      - kafka-net
+
+volumes:
+  broker-1-data:
+  broker-1-logs:
+  broker-2-data:
+  broker-2-logs:
+  broker-3-data:
+  broker-3-logs:
+
+networks:
+  kafka-net:
+    external: true
+  elk-net:
+    external: true
