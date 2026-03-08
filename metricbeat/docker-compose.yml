@@ -7,11 +7,11 @@ services:
       bash -c "
         cp /usr/share/metricbeat/metricbeat.yml /tmp/metricbeat.yml &&
         chmod go-w /tmp/metricbeat.yml &&
-        until wget -qO- --no-check-certificate https://es01:9200 2>/dev/null | grep -q 'cluster_name'; do
+        until curl -s -k -u "elastic:${ELASTIC_PASSWORD}" https://es01:9200 2>/dev/null | grep -q 'cluster_name'; do
           echo '>>> Attente Elasticsearch...'
           sleep 10
         done &&
-        until wget -qO- http://kibana:5601/api/status 2>/dev/null | grep -q 'available'; do
+        until curl -s http://kibana:5601/api/status 2>/dev/null | grep -q 'available'; do
           echo '>>> Attente Kibana...'
           sleep 10
         done &&

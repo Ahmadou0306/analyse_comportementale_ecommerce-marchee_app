@@ -79,6 +79,9 @@ services:
       KAFKA_LOG_RETENTION_HOURS: 168          # 7 jours
       KAFKA_LOG_RETENTION_BYTES: 1073741824   # 1 GB max par partition
 
+      # - Redirige les logs applicatifs log4j vers le volume monté -
+      KAFKA_LOG4J_OPTS: "-Dkafka.logs.dir=/var/lib/kafka/logs"
+
     depends_on:
       - controller-1
       - controller-2
@@ -115,13 +118,16 @@ services:
       KAFKA_LOG_RETENTION_HOURS: 168
       KAFKA_LOG_RETENTION_BYTES: 1073741824
 
+      # - Redirige les logs applicatifs log4j vers le volume monté -
+      KAFKA_LOG4J_OPTS: "-Dkafka.logs.dir=/var/lib/kafka/logs"
+
     depends_on:
       - controller-1
       - controller-2
       - controller-3
     volumes:
       - broker-2-data:/var/lib/kafka/data
-      - broker-1-logs:/var/lib/kafka/logs
+      - broker-2-logs:/var/lib/kafka/logs
     networks:
       - kafka-net
 
@@ -150,6 +156,9 @@ services:
 
       KAFKA_LOG_RETENTION_HOURS: 168
       KAFKA_LOG_RETENTION_BYTES: 1073741824
+
+      # - Redirige les logs applicatifs log4j vers le volume monté -
+      KAFKA_LOG4J_OPTS: "-Dkafka.logs.dir=/var/lib/kafka/logs"
 
     depends_on:
       - controller-1
