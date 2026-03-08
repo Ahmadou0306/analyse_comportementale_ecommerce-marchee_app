@@ -23,7 +23,7 @@ services:
   # Backend Express.js
   backend:
     build:
-      context: .
+      context: backend
       dockerfile: dockerfile
     container_name: marche_backend
     restart: unless-stopped
@@ -45,10 +45,32 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./images:/app/images
+      - ./backend/images:/app/images
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - marche-network
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: dockerfile
+    container_name: marche_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:5000/api}
+      VITE_API_TIMEOUT: ${VITE_API_TIMEOUT:-10000}
+      VITE_APP_NAME: ${VITE_APP_NAME:-MARCHÉ}
+      VITE_CURRENCY: ${VITE_CURRENCY:-FCFA}
+      VITE_COUNTRY_CODE: ${VITE_COUNTRY_CODE:-+221}
+      VITE_FREE_SHIPPING_THRESHOLD: ${VITE_FREE_SHIPPING_THRESHOLD:-50000}
+      VITE_SHIPPING_COST: ${VITE_SHIPPING_COST:-5000}
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     networks:
       - marche-network
 
