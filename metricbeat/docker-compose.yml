@@ -1,0 +1,36 @@
+services:
+  metricbeat-elk:
+    image: docker.elastic.co/beats/metricbeat:${STACK_VERSION}
+    container_name: metricbeat-elk
+    user: root
+    command: >
+      bash -c "
+        cp /usr/share/metricbeat/metricbeat.yml /tmp/metricbeat.yml &&
+        chmod go-w /tmp/metricbeat.yml &&
+        until wget -qO- --no-check-certificate https://es01:9200 2>/dev/null | grep -q 'cluster_name'; do
+          echo '>>> Attente Elasticsearch...'
+          sleep 10
+        done &&
+        until wget -qO- http://kibana:5601/api/status 2>/dev/null | grep -q 'available'; do
+          echo '>>> Attente Kibana...'
+          sleep 10
+        done &&
+        echo '>>> ELK prêt, démarrage Metricbeat' &&
+        metricbeat -e -c /tmp/metricbeat.yml -system.hostfs=/hostfs
+      "
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - KIBANA_HOST=${KIBANA_HOST}    
+      - ES_HOST=${ES_HOST}      
+    volumes:
+      - /proc:/hostfs/proc:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /:/hostfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+    networks:
+      - elk-net
+
+networks:
+  elk-net:
+    external: true
