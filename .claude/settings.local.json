@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install express-rate-limit --save)"
+      "Bash(npm install express-rate-limit --save)",
+      "Bash(docker compose -f \"c:\\\\Users\\\\ahmad\\\\OneDrive\\\\Desktop\\\\analyse_comportementale_ecommerce-marchee_app\\\\marche-app\\\\docker-compose.yml\" logs db)",
+      "Bash(\"c:/Users/ahmad/OneDrive/Desktop/analyse_comportementale_ecommerce-marchee_app/marche-app/.env\")"
     ]
   }
 }

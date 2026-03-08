@@ -25,9 +25,6 @@ output.kafka:
     - "broker-2:19092"
     - "broker-3:19092"
 
-  # Routing dynamique selon le label Docker du conteneur
-  topic: '%{[container.labels.filebeat_topic]}'
-
   # Si pas de label défini -> topic par défaut
   topics:
     - topic: "frontend-logs"
@@ -39,8 +36,7 @@ output.kafka:
     - topic: "postgres-logs"
       when.contains:
         container.name: "postgres" 
-    - topic: "app-logs"
-      # topic par défaut pour tout le reste
+    - topic: "app-logs" # topic par défaut pour tout le reste
 
   # - Fiabilité -
   required_acks: 1          # attend confirmation d'au moins 1 broker
