@@ -1,0 +1,16 @@
+# ----------------------─
+# PIPELINES — Déclaration des pipelines actives
+# Chaque pipeline tourne indépendamment
+# ----------------------─
+
+- pipeline.id: frontend
+  path.config: "/usr/share/logstash/pipeline/frontend.conf"
+  pipeline.workers: 2       # 2 threads parallèles pour cette pipeline
+
+- pipeline.id: backend
+  path.config: "/usr/share/logstash/pipeline/backend.conf"
+  pipeline.workers: 2
+
+- pipeline.id: postgres
+  path.config: "/usr/share/logstash/pipeline/postgres.conf"
+  pipeline.workers: 2

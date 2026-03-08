@@ -1,0 +1,262 @@
+services:
+
+  # ----------------------─
+  # SERVICE SETUP : génère les certificats TLS
+  # et définit les mots de passe au premier démarrage
+  # S'arrête automatiquement une fois terminé
+  # ----------------------─
+  setup:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    container_name: es-setup
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+    user: "0"
+    command: >
+      bash -c '
+        if [ ! -f config/certs/ca.zip ]; then
+          echo ">>> Génération du CA..."
+          bin/elasticsearch-certutil ca --silent --pem -out config/certs/ca.zip
+          unzip config/certs/ca.zip -d config/certs
+        fi
+
+        if [ ! -f config/certs/certs.zip ]; then
+          echo ">>> Génération des certificats nœuds..."
+          echo -e "instances:\n  - name: es01\n    dns:\n      - es01\n      - localhost\n  - name: es02\n    dns:\n      - es02\n      - localhost\n  - name: es03\n    dns:\n      - es03\n      - localhost\n" > config/certs/instances.yml
+          bin/elasticsearch-certutil cert --silent --pem \
+            --ca-cert config/certs/ca/ca.crt \
+            --ca-key  config/certs/ca/ca.key \
+            --in      config/certs/instances.yml \
+            --out     config/certs/certs.zip
+          unzip config/certs/certs.zip -d config/certs
+        fi
+
+        echo ">>> Permissions certificats..."
+        chown -R 1000:0 config/certs
+        chmod -R 750    config/certs
+
+        echo ">>> Attente démarrage es01..."
+        until curl -s -o /dev/null -k https://es01:9200; do
+          sleep 5
+        done
+
+        echo ">>> Définition mot de passe elastic..."
+        curl -s -X POST \
+          -k \
+          -u elastic:changeme \
+          -H "Content-Type: application/json" \
+          https://es01:9200/_security/user/elastic/_password \
+          -d "{\"password\":\"${ELASTIC_PASSWORD}\"}"
+
+        echo ">>> Définition mot de passe kibana_system..."
+        curl -s -X POST \
+          -k \
+          -u "elastic:${ELASTIC_PASSWORD}" \
+          -H "Content-Type: application/json" \
+          https://es01:9200/_security/user/kibana_system/_password \
+          -d "{\"password\":\"${KIBANA_PASSWORD}\"}"
+
+        echo ">>> Setup terminé"
+      '
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+    networks:
+      - elk-net
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f config/certs/es01/es01.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
+
+  # ----------------------─
+  # NŒUD 1 — Master eligible + Data
+  # ----------------------─
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    container_name: es01
+    depends_on:
+      setup:
+        condition: service_healthy
+    environment:
+      - node.name=es01
+      - cluster.name=es-cluster
+      - discovery.seed_hosts=es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/es01/es01.key
+      - xpack.security.http.ssl.certificate=certs/es01/es01.crt
+      - xpack.security.http.ssl.verification_mode=none
+
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.key=certs/es01/es01.key
+      - xpack.security.transport.ssl.certificate=certs/es01/es01.crt
+      - xpack.security.transport.ssl.verification_mode=none
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - es01-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elk-net
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -k -u elastic:${ELASTIC_PASSWORD} https://localhost:9200/_cluster/health | grep -q '\"status\"'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
+  # ----------------------─
+  # NŒUD 2 — Master eligible + Data
+  # ----------------------─
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    container_name: es02
+    depends_on:
+      setup:
+        condition: service_healthy
+    environment:
+      - node.name=es02
+      - cluster.name=es-cluster
+      - discovery.seed_hosts=es01,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/es02/es02.key
+      - xpack.security.http.ssl.certificate=certs/es02/es02.crt
+      - xpack.security.http.ssl.verification_mode=none
+
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.key=certs/es02/es02.key
+      - xpack.security.transport.ssl.certificate=certs/es02/es02.crt
+      - xpack.security.transport.ssl.verification_mode=none
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - es02-data:/usr/share/elasticsearch/data
+    networks:
+      - elk-net
+
+  # ----------------------─
+  # NŒUD 3 — Master eligible + Data
+  # ----------------------─
+  es03:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    container_name: es03
+    depends_on:
+      setup:
+        condition: service_healthy
+    environment:
+      - node.name=es03
+      - cluster.name=es-cluster
+      - discovery.seed_hosts=es01,es02
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=certs/es03/es03.key
+      - xpack.security.http.ssl.certificate=certs/es03/es03.crt
+      - xpack.security.http.ssl.verification_mode=none
+
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.key=certs/es03/es03.key
+      - xpack.security.transport.ssl.certificate=certs/es03/es03.crt
+      - xpack.security.transport.ssl.verification_mode=none
+
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - certs:/usr/share/elasticsearch/config/certs
+      - es03-data:/usr/share/elasticsearch/data
+    networks:
+      - elk-net
+
+  # ----------------------─
+  # LOGSTASH — consomme Kafka, envoie vers Elasticsearch
+  # ----------------------─
+  logstash:
+    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+    container_name: logstash
+    depends_on:
+      es01:
+        condition: service_healthy
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - LS_JAVA_OPTS=-Xms512m -Xmx512m
+    volumes:
+      - ./config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./pipeline/:/usr/share/logstash/pipeline/:ro
+    networks:
+      - kafka-net
+      - elk-net
+
+  # ----------------------─
+  # KIBANA — interface de visualisation
+  # ----------------------─
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    container_name: kibana
+    depends_on:
+      es01:
+        condition: service_healthy
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_HOSTS=https://es01:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_SSL_VERIFICATIONMODE=none
+      - XPACK_SECURITY_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+      - XPACK_REPORTING_ENCRYPTIONKEY=${ENCRYPTION_KEY}
+      - SERVER_NAME=kibana
+      - SERVER_HOST=0.0.0.0
+    networks:
+      - elk-net
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
+volumes:
+  certs:
+  es01-data:
+  es02-data:
+  es03-data:
+
+networks:
+  elk-net:
+    external: true
+  kafka-net:
+    external: true

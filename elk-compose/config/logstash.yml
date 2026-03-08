@@ -1,0 +1,12 @@
+# ----------------------─
+# CONFIG GLOBALE LOGSTASH
+# ----------------------─
+
+# Permet à Logstash de faire tourner plusieurs
+# pipelines en parallèle
+pipeline.ordered: false
+
+# Monitoring désactivé (pas de X-Pack ici)
+xpack.monitoring.enabled: false
+
+log.level: info

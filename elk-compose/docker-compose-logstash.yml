@@ -1,0 +1,20 @@
+services:
+  logstash:
+    image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
+    container_name: logstash
+    environment:
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - LS_JAVA_OPTS=-Xms512m -Xmx512m
+    volumes:
+      - ./config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./pipeline/:/usr/share/logstash/pipeline/:ro
+    networks:
+      - kafka-net   # pour consommer depuis Kafka
+      - elk-net     # pour envoyer vers Elasticsearch
+
+networks:
+  kafka-net:
+    external: true
+  elk-net:
+    external: true
