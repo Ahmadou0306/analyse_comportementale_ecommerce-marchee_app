@@ -1,5 +1,7 @@
 services:
-  # Base de données PostgreSQL
+  # ─────────────────────────────────────────────
+  # BASE DE DONNÉES PostgreSQL
+  # ─────────────────────────────────────────────
   db:
     image: postgres:15-alpine
     container_name: marche_postgres
@@ -12,6 +14,10 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    command: >
+      postgres
+      -c log_min_messages=warning
+      -c log_min_duration_statement=1000
     networks:
       - marche-network
     healthcheck:
@@ -19,8 +25,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "5"
 
-  # Backend Express.js
+  # ─────────────────────────────────────────────
+  # BACKEND Express.js
+  # ─────────────────────────────────────────────
   backend:
     build:
       context: backend
@@ -51,7 +64,18 @@ services:
         condition: service_healthy
     networks:
       - marche-network
+    labels:
+      collect_logs: "true"          # ← Filebeat collectera ce conteneur
+      filebeat_topic: "backend-logs"  # ← topic Kafka cible
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "5"
 
+  # ─────────────────────────────────────────────
+  # FRONTEND
+  # ─────────────────────────────────────────────
   frontend:
     build:
       context: frontend
@@ -73,6 +97,40 @@ services:
       - /app/node_modules
     networks:
       - marche-network
+    labels:
+      collect_logs: "true"           # ← Filebeat collectera ce conteneur
+      filebeat_topic: "frontend-logs"  # ← topic Kafka cible
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ─────────────────────────────────────────────
+  # FILEBEAT APP — Collecte les logs des conteneurs
+  # Envoie vers Kafka selon le label filebeat_topic
+  # ─────────────────────────────────────────────
+  filebeat-app:
+    image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
+    container_name: filebeat-app
+    user: root
+    # correction des permissions puis lancement filebeat
+    command: >
+      bash -c "
+        cp /usr/share/filebeat/filebeat.yml /tmp/filebeat.yml &&
+        chmod go-w /tmp/filebeat.yml &&
+        filebeat -e -c /tmp/filebeat.yml
+      "
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+    networks:
+      - kafka-net
+      - marche-network
+    depends_on:
+      - backend
+      - frontend
 
 volumes:
   postgres_data:
@@ -80,4 +138,7 @@ volumes:
 
 networks:
   marche-network:
+    name: marche-network
     driver: bridge
+  kafka-net:
+    external: true

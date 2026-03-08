@@ -138,7 +138,7 @@ const swaggerSpec = {
     },
   },
   paths: {
-    // ─── Health ──────────────────────────────────────────
+    // -─ Health ---------------------
     '/api/health': {
       get: {
         tags: ['Health'],
@@ -152,7 +152,7 @@ const swaggerSpec = {
       },
     },
 
-    // ─── Auth ────────────────────────────────────────────
+    // -─ Auth ----------------------
     '/api/auth/send-otp': {
       post: {
         tags: ['Auth'],
@@ -251,7 +251,7 @@ const swaggerSpec = {
       },
     },
 
-    // ─── Products ────────────────────────────────────────
+    // -─ Products --------------------
     '/api/products': {
       get: {
         tags: ['Products'],
@@ -367,7 +367,7 @@ const swaggerSpec = {
       },
     },
 
-    // ─── Categories ──────────────────────────────────────
+    // -─ Categories -------------------
     '/api/categories': {
       get: {
         tags: ['Categories'],
@@ -439,7 +439,7 @@ const swaggerSpec = {
       },
     },
 
-    // ─── Orders ──────────────────────────────────────────
+    // -─ Orders ---------------------
     '/api/orders': {
       post: {
         tags: ['Orders'],
@@ -531,7 +531,7 @@ const swaggerSpec = {
       },
     },
 
-    // ─── Admin Dashboard ─────────────────────────────────
+    // -─ Admin Dashboard ----------------─
     '/api/admin/dashboard': {
       get: {
         tags: ['Admin'],

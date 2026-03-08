@@ -13,7 +13,7 @@ const categories = [
 ];
 
 const products = [
-  // ── Électronique (11 produits) ──
+  // - Électronique (11 produits) -
   { name: 'Samsung Galaxy A56', categorySlug: 'electronics', price: 350000, oldPrice: 420000, rating: 5, tag: 'sale', image: '/images/electroniques/Samsung_Galaxy_A56.jpg', description: 'Smartphone Samsung Galaxy A56 avec écran Super AMOLED 6.7", processeur Exynos 1580, 8Go RAM, 128Go stockage, caméra 50MP et batterie 5000mAh.' },
   { name: 'Xiaomi 14C', categorySlug: 'electronics', price: 180000, rating: 4, tag: 'new', image: '/images/electroniques/Xiaomi_14C.jpg', description: 'Xiaomi 14C avec écran LCD 6.67", processeur MediaTek Helio G91, 4Go RAM, 128Go stockage. Batterie longue durée 5160mAh.' },
   { name: 'Samsung Galaxy A31 Renewed', categorySlug: 'electronics', price: 120000, oldPrice: 160000, rating: 4, tag: 'sale', image: '/images/electroniques/Renewed_A31.jpg', description: 'Samsung Galaxy A31 reconditionné en excellent état. Écran Super AMOLED 6.4", 64Go stockage, quadruple caméra arrière.' },
@@ -26,7 +26,7 @@ const products = [
   { name: 'Souris Filaire LED RichRipple', categorySlug: 'electronics', price: 5000, rating: 3, tag: 'popular', image: '/images/electroniques/RichRipple_Souris_filaire_a_LED_colorees.jpg', description: 'Souris filaire gaming avec éclairage LED coloré. Capteur optique précis, 3 boutons + molette. Plug and play USB.' },
   { name: 'Support Refroidisseur PC Portable', categorySlug: 'electronics', price: 18000, rating: 4, tag: 'new', image: '/images/electroniques/Support_et_Refroidisseur_ajustable_pour_Ordinateur_Portable.jpg', description: 'Support ajustable avec ventilateurs de refroidissement intégrés pour ordinateur portable. Angle réglable, ports USB supplémentaires.' },
 
-  // ── Mode (12 produits) ──
+  // - Mode (12 produits) -
   { name: 'Robe Patchwork CALLIARA', categorySlug: 'fashion', price: 22000, rating: 5, tag: 'new', image: '/images/mode/CALLIARA_Robe_patchwork.jpg', description: 'Robe patchwork CALLIARA au design unique. Assemblage de tissus colorés, coupe flatteuse et confortable. Style africain moderne.' },
   { name: 'Robe Élégante Décontractée', categorySlug: 'fashion', price: 18000, rating: 4, image: '/images/mode/Robe_elegante_pour_femme_decontracte.jpg', description: 'Robe élégante pour femme au style décontracté chic. Tissu léger et fluide, parfaite pour toutes les occasions.' },
   { name: 'Robe Élégante Jaune', categorySlug: 'fashion', price: 20000, rating: 4, tag: 'popular', image: '/images/mode/Robe_elegante_pour_femme_jaune.jpg', description: 'Magnifique robe jaune lumineuse pour femme. Coupe ajustée et élégante, idéale pour les événements et sorties.' },
@@ -40,7 +40,7 @@ const products = [
   { name: 'Sac Bandoulière Dames STY', categorySlug: 'fashion', price: 28000, rating: 5, tag: 'new', image: '/images/mode/STY_Sac_a_bandouliere_dames.jpg', description: 'Sac à bandoulière élégant pour dames STY. Cuir synthétique de qualité, compartiments multiples, finitions soignées.' },
   { name: 'Sac à Main SXCHEN', categorySlug: 'fashion', price: 45000, oldPrice: 55000, rating: 5, tag: 'sale', image: '/images/mode/SXCHEN_Mode_Femme_Sacs_a_Main.jpg', description: 'Sac à main luxueux SXCHEN pour femme. Design moderne, cuir PU premium, plusieurs compartiments. Accessoire indispensable.' },
 
-  // ── Maison & Jardin (13 produits) ──
+  // - Maison & Jardin (13 produits) -
   { name: 'Autocollants Muraux 3D Rond Miroir', categorySlug: 'home', price: 8000, rating: 4, tag: 'popular', image: '/images/maison_jardin/Autocollant_Mural_Miroir_3D_Rond.jpg', description: 'Set d\'autocollants muraux effet miroir 3D ronds. Décoration moderne et élégante pour salon, chambre ou bureau.' },
   { name: 'Carte du Monde 3D Murale', categorySlug: 'home', price: 25000, rating: 5, tag: 'new', image: '/images/maison_jardin/Autocollants_Mural_Carte_Du_Monde_3D.jpg', description: 'Autocollant mural carte du monde en 3D. Décoration murale impressionnante, facile à installer. Parfait pour bureau ou salon.' },
   { name: 'Autocollants Muraux Arbre 3D', categorySlug: 'home', price: 15000, rating: 4, image: '/images/maison_jardin/Autocollants_Muraux_arbre_3D.jpg', description: 'Stickers muraux arbre 3D avec feuilles. Déco nature pour salon ou chambre. Installation facile, repositionnable.' },
@@ -55,7 +55,7 @@ const products = [
   { name: 'Tuyau Arrosage Extensible', categorySlug: 'home', price: 18000, oldPrice: 24000, rating: 4, tag: 'sale', image: '/images/maison_jardin/Tuyau_arrosage_extensible.jpg', description: 'Tuyau d\'arrosage extensible jusqu\'à 3 fois sa taille. Léger et compact, pistolet 7 modes d\'arrosage inclus.' },
   { name: 'Tuyau Arrosage Extensible 30m', categorySlug: 'home', price: 28000, rating: 5, tag: 'popular', image: '/images/maison_jardin/Tuyau_arrosage_Extensible_30_M.jpg', description: 'Tuyau d\'arrosage extensible 30 mètres avec pistolet professionnel 8 fonctions. Double couche latex, connecteurs en laiton.' },
 
-  // ── Sports (10 produits) ──
+  // - Sports (10 produits) -
   { name: '5 Bandes de Résistance Élastique', categorySlug: 'sports', price: 15000, rating: 5, tag: 'popular', image: '/images/sport/5_Bandes_de_Resistance_elastique_Gym.jpg', description: 'Set de 5 bandes de résistance élastiques pour fitness et musculation. 5 niveaux de résistance, sac de transport inclus.' },
   { name: 'Bande de Résistance Fitness', categorySlug: 'sports', price: 8000, rating: 4, image: '/images/sport/Bande_de_resistance_pour_sport_et_fitness.jpg', description: 'Bande de résistance en latex naturel pour sport et fitness. Idéale pour étirements, musculation et rééducation.' },
   { name: 'Appareil Entraînement Multifonction', categorySlug: 'sports', price: 35000, oldPrice: 45000, rating: 5, tag: 'sale', image: '/images/sport/Appareil_d_entraînement_multifonction.jpg', description: 'Appareil d\'entraînement multifonction compact. Travaillez bras, jambes, abdos et dos. Résistance réglable, pliable.' },
@@ -67,7 +67,7 @@ const products = [
   { name: 'Correcteur de Posture JINGBA', categorySlug: 'sports', price: 15000, rating: 5, tag: 'new', image: '/images/sport/JINGBA_Correcteur_de_posture_pour_hommes_et_femmes.jpg', description: 'Correcteur de posture ajustable JINGBA pour hommes et femmes. Redresse le dos, soulage les douleurs. Discret sous les vêtements.' },
   { name: 'AB Roller Revoflex', categorySlug: 'sports', price: 20000, rating: 5, tag: 'popular', image: '/images/sport/Revoflex_Bande_de_roue_AB_Roller_avec_resistance_elastique.jpg', description: 'AB Roller Revoflex avec bandes de résistance élastiques. Exercices abdominaux, bras et jambes. Kit complet d\'entraînement à domicile.' },
 
-  // ── Beauté (12 produits) ──
+  // - Beauté (12 produits) -
   { name: 'TOPICREM Lait Ultra-Hydratant', categorySlug: 'beauty', price: 18000, rating: 5, tag: 'popular', image: '/images/Beaute/TOPICREM_Lait_Ultra-hydratant.jpg', description: 'Lait corporel ultra-hydratant TOPICREM. Formule douce pour peaux sensibles et sèches. Hydratation 24h, sans paraben.' },
   { name: 'SIGNAL Pack Soin Dentaire', categorySlug: 'beauty', price: 8000, rating: 4, image: '/images/Beaute/SIGNAL_Pack_de_soin.jpg', description: 'Pack de soin dentaire SIGNAL complet : dentifrice + brosse à dents. Protection caries et blancheur longue durée.' },
   { name: 'NIVEA Lot de 2 Laits Corporels', categorySlug: 'beauty', price: 15000, oldPrice: 20000, rating: 5, tag: 'sale', image: '/images/Beaute/NIVEA_LOT_DE_2_Lait.jpg', description: 'Lot de 2 laits corporels NIVEA. Hydratation intense pour peaux sèches. Formule enrichie en huile d\'amande douce.' },
@@ -81,7 +81,7 @@ const products = [
   { name: 'Coffret VIP Homme', categorySlug: 'beauty', price: 35000, oldPrice: 45000, rating: 5, tag: 'sale', image: '/images/Beaute/Coffret_VIP_Homme-Gel_douche_Savon.jpg', description: 'Coffret cadeau VIP Homme : gel douche + savon premium. Parfum boisé masculin. Emballage cadeau élégant.' },
   { name: 'Clairmen Gamme Soin Homme', categorySlug: 'beauty', price: 22000, rating: 5, tag: 'new', image: '/images/Beaute/Clairmen_Gamme.jpg', description: 'Gamme complète de soins Clairmen pour homme. Nettoyant, hydratant et soin éclaircissant. Résultats visibles en 2 semaines.' },
 
-  // ── Livres (10 produits) ──
+  // - Livres (10 produits) -
   { name: 'Traité sur la Tolérance — Voltaire', categorySlug: 'books', price: 8000, rating: 5, tag: 'popular', image: '/images/livres/traite_sur_la_tolerance_voltaire.jpg', description: 'Classique de la littérature française. Voltaire y défend la tolérance religieuse avec son style incisif et ironique.' },
   { name: 'Nations Nègres et Culture — Cheikh Anta Diop', categorySlug: 'books', price: 15000, rating: 5, tag: 'popular', image: '/images/livres/nation_negre_culture_Cheikh_anta_diop.jpg', description: 'Ouvrage fondamental de Cheikh Anta Diop sur l\'apport de l\'Afrique noire à la civilisation universelle. Incontournable.' },
   { name: 'Aya de Yopougon', categorySlug: 'books', price: 12000, rating: 5, tag: 'new', image: '/images/livres/aya_de_youpougon.jpeg', description: 'BD culte de Marguerite Abouet et Clément Oubrerie. Chronique joyeuse de la vie quotidienne à Abidjan dans les années 70.' },

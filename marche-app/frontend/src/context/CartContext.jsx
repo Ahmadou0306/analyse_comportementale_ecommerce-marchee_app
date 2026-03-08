@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useCallback } from 'react';
+import { createContext, useContext, useReducer, useCallback, useRef } from 'react';
 
 const CartContext = createContext();
 
@@ -30,13 +30,50 @@ function cartReducer(state, action) {
   }
 }
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+
+function logCartEvent(event, items, subtotal, product = null) {
+  const stored = localStorage.getItem('marche_user');
+  const userId = stored ? JSON.parse(stored).id : null;
+  fetch(`${API_BASE}/events/cart`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ event, userId, product, items, subtotal }),
+  }).catch(() => {});
+}
+
 export function CartProvider({ children }) {
   const [state, dispatch] = useReducer(cartReducer, { items: [] });
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
-  const addToCart = useCallback((product) => dispatch({ type: 'ADD', product }), []);
-  const removeFromCart = useCallback((productId) => dispatch({ type: 'REMOVE', productId }), []);
-  const updateQty = useCallback((productId, delta) => dispatch({ type: 'UPDATE_QTY', productId, delta }), []);
-  const clearCart = useCallback(() => dispatch({ type: 'CLEAR' }), []);
+  const addToCart = useCallback((product) => {
+    dispatch({ type: 'ADD', product });
+    const newItems = cartReducer(stateRef.current, { type: 'ADD', product }).items;
+    const subtotal = newItems.reduce((s, i) => s + i.product.price * i.qty, 0);
+    logCartEvent('add', newItems, subtotal, product);
+  }, []);
+
+  const removeFromCart = useCallback((productId) => {
+    dispatch({ type: 'REMOVE', productId });
+    const newItems = cartReducer(stateRef.current, { type: 'REMOVE', productId }).items;
+    const subtotal = newItems.reduce((s, i) => s + i.product.price * i.qty, 0);
+    const product = stateRef.current.items.find((i) => i.product.id === productId)?.product;
+    logCartEvent('remove', newItems, subtotal, product);
+  }, []);
+
+  const updateQty = useCallback((productId, delta) => {
+    dispatch({ type: 'UPDATE_QTY', productId, delta });
+    const newItems = cartReducer(stateRef.current, { type: 'UPDATE_QTY', productId, delta }).items;
+    const subtotal = newItems.reduce((s, i) => s + i.product.price * i.qty, 0);
+    const product = stateRef.current.items.find((i) => i.product.id === productId)?.product;
+    logCartEvent('update_qty', newItems, subtotal, product);
+  }, []);
+
+  const clearCart = useCallback(() => {
+    logCartEvent('clear', [], 0);
+    dispatch({ type: 'CLEAR' });
+  }, []);
 
   const cartTotal = state.items.reduce((s, i) => s + i.qty, 0);
   const cartSubtotal = state.items.reduce((s, i) => s + i.product.price * i.qty, 0);

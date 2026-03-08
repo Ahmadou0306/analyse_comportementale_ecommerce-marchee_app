@@ -1,0 +1,61 @@
+filebeat.inputs:
+
+  # ----------------------─
+  # SOURCE : logs Docker de tous les conteneurs
+  # Filebeat lit automatiquement stdout/stderr
+  # de chaque conteneur via le socket Docker
+  # ----------------------─
+  - type: container
+    paths:
+      - /var/lib/docker/containers/*/*.log   # chemin standard des logs Docker
+
+    # - Enrichissement automatique avec les métadonnées Docker -
+    # Ajoute : nom du conteneur, image, labels, etc.
+    processors:
+      - add_docker_metadata:
+          host: "unix:///var/run/docker.sock"
+
+# ----------------------─
+# ROUTING : envoie vers le bon topic Kafka
+# selon le nom du conteneur
+# ----------------------─
+output.kafka:
+  hosts:
+    - "broker-1:19092"
+    - "broker-2:19092"
+    - "broker-3:19092"
+
+  # Routing dynamique selon le label Docker du conteneur
+  topic: '%{[container.labels.filebeat_topic]}'
+
+  # Si pas de label défini -> topic par défaut
+  topics:
+    - topic: "frontend-logs"
+      when.contains:
+        container.name: "frontend"   # si le nom du conteneur contient "frontend"
+    - topic: "backend-logs"
+      when.contains:
+        container.name: "backend"    # si le nom du conteneur contient "backend"
+    - topic: "postgres-logs"
+      when.contains:
+        container.name: "postgres" 
+    - topic: "app-logs"
+      # topic par défaut pour tout le reste
+
+  # - Fiabilité -
+  required_acks: 1          # attend confirmation d'au moins 1 broker
+  compression: gzip         # compresse les messages pour réduire la bande passante
+  max_message_bytes: 1000000
+
+# ----------------------─
+# REGISTRE : Filebeat mémorise où il en est
+# dans la lecture des logs pour ne pas
+# renvoyer les mêmes logs après redémarrage
+# ----------------------─
+filebeat.registry.path: /usr/share/filebeat/data/registry
+
+# ----------------------─
+# LOGS FILEBEAT lui-même
+# ----------------------─
+logging.level: info
+logging.to_files: false   # logs vers stdout pour Docker

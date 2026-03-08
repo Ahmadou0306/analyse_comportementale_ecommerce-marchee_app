@@ -1,0 +1,26 @@
+
+services:
+  filebeat-app:
+    image: docker.elastic.co/beats/filebeat:${STACK_VERSION}
+    container_name: filebeat-app
+    user: root
+    # correction des permissions puis lancement filebeat
+    command: >
+      bash -c "
+        cp /usr/share/filebeat/filebeat.yml /tmp/filebeat.yml &&
+        chmod go-w /tmp/filebeat.yml &&
+        filebeat -e -c /tmp/filebeat.yml
+      "
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+    networks:
+      - kafka-net
+      - marche-network
+
+networks:
+  kafka-net:
+    external: true
+  marche-network:
+    external: true

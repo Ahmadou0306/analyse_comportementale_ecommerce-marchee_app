@@ -8,6 +8,7 @@ const productRoutes = require('./routes/products');
 const categoryRoutes = require('./routes/categories');
 const orderRoutes = require('./routes/orders');
 const adminRoutes = require('./routes/admin');
+const eventsRoutes = require('./routes/events');
 
 const path = require('path');
 
@@ -29,6 +30,16 @@ app.use(limiter);
 
 app.use(express.json());
 
+// Logger de requêtes → stdout uniquement
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const ms = Date.now() - start;
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} ${res.statusCode} ${ms}ms`);
+  });
+  next();
+});
+
 // Servir les images statiquement
 app.use('/images', express.static(path.join(__dirname, '..', 'images')));
 
@@ -48,6 +59,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/events', eventsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
