@@ -7,7 +7,7 @@ up-app:
 	docker compose $(ENV_FILE) -f marche-app/docker-compose.yml up --build -d
 
 down-app:
-	docker compose $(ENV_FILE) -f marche-app/docker-compose.yml down -v
+	docker compose $(ENV_FILE) -f marche-app/docker-compose.yml down
 
 logs-app:
 	docker compose $(ENV_FILE) -f marche-app/docker-compose.yml logs -f
@@ -22,7 +22,7 @@ up-app-filebeat:
 	docker compose $(ENV_FILE) -f marche-app/docker-compose-filebeat.yml up --build -d
 
 down-app-filebeat:
-	docker compose $(ENV_FILE) -f marche-app/docker-compose-filebeat.yml down -v
+	docker compose $(ENV_FILE) -f marche-app/docker-compose-filebeat.yml down
 
 logs-app-filebeat:
 	docker compose $(ENV_FILE) -f marche-app/docker-compose-filebeat.yml logs -f
@@ -34,7 +34,7 @@ up-elk:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose.yml up --build -d
 
 down-elk:
-	docker compose $(ENV_FILE) -f elk-compose/docker-compose.yml down -v
+	docker compose $(ENV_FILE) -f elk-compose/docker-compose.yml down
 
 logs-elk:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose.yml logs -f
@@ -46,7 +46,7 @@ up-elk-es:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-elasticsearch.yml up --build -d
 
 down-elk-es:
-	docker compose $(ENV_FILE) -f elk-compose/docker-compose-elasticsearch.yml down -v
+	docker compose $(ENV_FILE) -f elk-compose/docker-compose-elasticsearch.yml down
 
 logs-elk-es:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-elasticsearch.yml logs -f
@@ -58,7 +58,7 @@ up-elk-kibana:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-kibana.yml up --build -d
 
 down-elk-kibana:
-	docker compose $(ENV_FILE) -f elk-compose/docker-compose-kibana.yml down -v
+	docker compose $(ENV_FILE) -f elk-compose/docker-compose-kibana.yml down
 
 logs-elk-kibana:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-kibana.yml logs -f
@@ -70,7 +70,7 @@ up-elk-logstash:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-logstash.yml up --build -d
 
 down-elk-logstash:
-	docker compose $(ENV_FILE) -f elk-compose/docker-compose-logstash.yml down -v
+	docker compose $(ENV_FILE) -f elk-compose/docker-compose-logstash.yml down
 
 logs-elk-logstash:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-logstash.yml logs -f
@@ -82,7 +82,7 @@ up-kafka:
 	docker compose $(ENV_FILE) -f kafka/docker-compose.yml up --build -d
 
 down-kafka:
-	docker compose $(ENV_FILE) -f kafka/docker-compose.yml down -v
+	docker compose $(ENV_FILE) -f kafka/docker-compose.yml down
 
 logs-kafka:
 	docker compose $(ENV_FILE) -f kafka/docker-compose.yml logs -f
@@ -94,7 +94,7 @@ up-metricbeat:
 	docker compose $(ENV_FILE) -f metricbeat/docker-compose.yml up --build -d
 
 down-metricbeat:
-	docker compose $(ENV_FILE) -f metricbeat/docker-compose.yml down -v
+	docker compose $(ENV_FILE) -f metricbeat/docker-compose.yml down
 
 logs-metricbeat:
 	docker compose $(ENV_FILE) -f metricbeat/docker-compose.yml logs -f
