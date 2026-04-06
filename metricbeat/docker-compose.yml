@@ -20,8 +20,8 @@ services:
       "
     environment:
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - KIBANA_HOST=${KIBANA_HOST}    
-      - ES_HOST=${ES_HOST}      
+      - KIBANA_HOST=${KIBANA_HOST}
+      - ES_HOST=${ES_HOST}
     volumes:
       - /proc:/hostfs/proc:ro
       - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro

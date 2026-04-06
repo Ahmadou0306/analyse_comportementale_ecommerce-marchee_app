@@ -6,6 +6,4 @@ MAKEFILE.md
 .vite
 !.gitkeep
 .claude
-cours-kibana-8.11.md
-all_viz.md
-to-monitore_1.md
+*.md

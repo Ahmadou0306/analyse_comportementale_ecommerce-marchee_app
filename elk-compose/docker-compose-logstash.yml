@@ -2,6 +2,15 @@ services:
   logstash:
     image: docker.elastic.co/logstash/logstash:${STACK_VERSION}
     container_name: logstash
+    command: >
+      bash -c "
+        until curl -s -k -u elastic:${ELASTIC_PASSWORD} https://es01:9200 2>/dev/null | grep -q 'cluster_name'; do
+          echo '>>> Attente Elasticsearch...'
+          sleep 10
+        done &&
+        echo '>>> Elasticsearch prêt, démarrage Logstash' &&
+        /usr/share/logstash/bin/logstash
+      "
     environment:
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - LS_JAVA_OPTS=-Xms512m -Xmx512m
