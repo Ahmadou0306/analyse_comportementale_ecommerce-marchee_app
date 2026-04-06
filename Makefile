@@ -102,7 +102,14 @@ logs-metricbeat:
 # ─────────────────────────────────────────────
 # Tout lancer / arrêter
 # ─────────────────────────────────────────────
-up-all: up-kafka up-elk up-app up-metricbeat
+up-all:
+	$(MAKE) up-kafka
+	@echo "Waiting 30s before starting ELK..."; sleep 30
+	$(MAKE) up-elk
+	@echo "Waiting 30s before starting App..."; sleep 30
+	$(MAKE) up-app
+	@echo "Waiting 30s before starting Metricbeat..."; sleep 30
+	$(MAKE) up-metricbeat
 
 down-all: down-metricbeat down-app down-elk down-kafka
 
