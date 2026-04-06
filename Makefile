@@ -1,3 +1,5 @@
+export DOCKER_API_VERSION := 1.54
+
 ENV_FILE := --env-file .env
 
 # ─────────────────────────────────────────────

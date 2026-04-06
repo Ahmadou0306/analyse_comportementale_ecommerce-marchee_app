@@ -22,6 +22,7 @@ services:
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - KIBANA_HOST=${KIBANA_HOST}
       - ES_HOST=${ES_HOST}
+      - DOCKER_API_VERSION=1.54
     volumes:
       - /proc:/hostfs/proc:ro
       - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
