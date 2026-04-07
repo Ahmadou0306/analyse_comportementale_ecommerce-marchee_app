@@ -30,7 +30,7 @@ app.use(limiter);
 
 app.use(express.json());
 
-// Logger de requêtes → stdout uniquement
+// Logger de requêtes -> stdout uniquement
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {

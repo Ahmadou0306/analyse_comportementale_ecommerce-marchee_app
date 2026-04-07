@@ -6,4 +6,5 @@ MAKEFILE.md
 .vite
 !.gitkeep
 .claude
-*.md
+MONITORING.md
+node_modules
