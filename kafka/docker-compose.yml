@@ -1,7 +1,7 @@
 services:
 
   # ----------------------─
-  # CONTROLLERS — Gestion du cluster KRaft
+  # CONTROLLERS - Gestion du cluster KRaft
   # Ne reçoivent pas de messages, gèrent uniquement
   # les métadonnées et l'élection du leader
   # 3 pour respect de bonnes pratiques
@@ -49,7 +49,7 @@ services:
       - kafka-net
 
   # ----------------------─
-  # BROKERS — Reçoivent et stockent les messages
+  # BROKERS - Reçoivent et stockent les messages
   # ----------------------─
   broker-1:
     image: apache/kafka:latest
@@ -164,7 +164,7 @@ services:
     networks:
       - kafka-net
   # ----------------------─
-  # KAFKA INIT — Initialisation du cluster kafka
+  # KAFKA INIT - Initialisation du cluster kafka
   # Permet la création des topics correspondant en précisant les partitions ainsi que les facteurs réplicat
   # ----------------------─
   kafka-init:
@@ -222,7 +222,7 @@ services:
     networks:
       - kafka-net
   # ----------------------─
-  # KAFKA UI — Interface graphique
+  # KAFKA UI - Interface graphique
   # Accessible sur http://localhost:8080
   # ----------------------─
   kafka-ui:

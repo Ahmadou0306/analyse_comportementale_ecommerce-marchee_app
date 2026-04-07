@@ -36,7 +36,7 @@ async function request(endpoint, options = {}) {
 
 /**
  * Envoie un FormData (multipart) au backend.
- * Ne pas mettre Content-Type — le navigateur le génère avec le boundary.
+ * Ne pas mettre Content-Type - le navigateur le génère avec le boundary.
  */
 async function uploadRequest(endpoint, formData, method = 'POST') {
   const token = localStorage.getItem('marche_token');

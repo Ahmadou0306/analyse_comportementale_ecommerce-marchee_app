@@ -30,7 +30,7 @@ logs-app-filebeat:
 	docker compose $(ENV_FILE) -f marche-app/docker-compose-filebeat.yml logs -f
 
 # ─────────────────────────────────────────────
-# ELK — Stack complète (mutualisé)
+# ELK - Stack complète (mutualisé)
 # ─────────────────────────────────────────────
 up-elk:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose.yml up --build -d
@@ -42,7 +42,7 @@ logs-elk:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose.yml logs -f
 
 # ─────────────────────────────────────────────
-# ELK — Elasticsearch uniquement
+# ELK - Elasticsearch uniquement
 # ─────────────────────────────────────────────
 up-elk-es:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-elasticsearch.yml up --build -d
@@ -54,7 +54,7 @@ logs-elk-es:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-elasticsearch.yml logs -f
 
 # ─────────────────────────────────────────────
-# ELK — Kibana uniquement
+# ELK - Kibana uniquement
 # ─────────────────────────────────────────────
 up-elk-kibana:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-kibana.yml up --build -d
@@ -66,7 +66,7 @@ logs-elk-kibana:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-kibana.yml logs -f
 
 # ─────────────────────────────────────────────
-# ELK — Logstash uniquement
+# ELK - Logstash uniquement
 # ─────────────────────────────────────────────
 up-elk-logstash:
 	docker compose $(ENV_FILE) -f elk-compose/docker-compose-logstash.yml up --build -d

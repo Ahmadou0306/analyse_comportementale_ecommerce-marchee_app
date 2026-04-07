@@ -1,10 +1,4 @@
-cours.md
-project.md
-Ajouter_readme.txt
-MAKEFILE.md
 .env
 .vite
 !.gitkeep
-.claude
-MONITORING.md
 node_modules

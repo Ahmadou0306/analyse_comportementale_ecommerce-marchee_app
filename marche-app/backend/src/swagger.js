@@ -3,7 +3,7 @@ const swaggerSpec = {
   info: {
     title: 'MARCHÉ API',
     version: '1.0.0',
-    description: 'API e-commerce MARCHÉ — Authentification OTP, produits, catégories, commandes et administration. Devise : FCFA.',
+    description: 'API e-commerce MARCHÉ - Authentification OTP, produits, catégories, commandes et administration. Devise : FCFA.',
     contact: { email: 'admin@marche.cd' },
   },
   servers: [

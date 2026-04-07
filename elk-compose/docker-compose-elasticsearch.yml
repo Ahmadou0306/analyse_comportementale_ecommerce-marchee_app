@@ -71,7 +71,7 @@ services:
       retries: 120
 
   # ----------------------─
-  # NŒUD 1 — Master eligible + Data
+  # NŒUD 1 - Master eligible + Data
   # ----------------------─
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
@@ -123,7 +123,7 @@ services:
       retries: 120
 
   # ----------------------─
-  # NŒUD 2 — Master eligible + Data
+  # NŒUD 2 - Master eligible + Data
   # ----------------------─
   es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
@@ -162,7 +162,7 @@ services:
       - elk-net
 
   # ----------------------─
-  # NŒUD 3 — Master eligible + Data
+  # NŒUD 3 - Master eligible + Data
   # ----------------------─
   es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}

@@ -107,7 +107,7 @@ services:
         max-file: "5"
 
   # ─────────────────────────────────────────────
-  # FILEBEAT APP — Collecte les logs des conteneurs
+  # FILEBEAT APP - Collecte les logs des conteneurs
   # Envoie vers Kafka selon le label filebeat_topic
   # ─────────────────────────────────────────────
   filebeat-app:

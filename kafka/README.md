@@ -1,4 +1,4 @@
-# kafka — Cluster de streaming
+# kafka - Cluster de streaming
 
 Cluster Kafka en mode **KRaft** (sans Zookeeper) utilisé comme buffer de streaming entre Filebeat et Logstash.
 
@@ -6,7 +6,7 @@ Cluster Kafka en mode **KRaft** (sans Zookeeper) utilisé comme buffer de stream
 
 ## Rôle dans la pipeline
 
-Kafka découple les producteurs (Filebeat) des consommateurs (Logstash). Si Logstash est lent ou redémarre, les messages ne sont pas perdus — ils attendent dans le topic jusqu'à être consommés.
+Kafka découple les producteurs (Filebeat) des consommateurs (Logstash). Si Logstash est lent ou redémarre, les messages ne sont pas perdus - ils attendent dans le topic jusqu'à être consommés.
 
 ```
 Filebeat  ->  Kafka (topics)  ->  Logstash  ->  Elasticsearch
@@ -15,7 +15,7 @@ Filebeat  ->  Kafka (topics)  ->  Logstash  ->  Elasticsearch
 
 ---
 
-## KRaft — Kafka sans Zookeeper
+## KRaft - Kafka sans Zookeeper
 
 Le mode **KRaft** remplace Zookeeper par un consensus interne basé sur le protocole **Raft**. Les métadonnées du cluster (liste des topics, partitions, leaders) sont gérées directement par des nœuds dédiés appelés **controllers**.
 
@@ -24,11 +24,11 @@ Le mode **KRaft** remplace Zookeeper par un consensus interne basé sur le proto
 3 Brokers      ->  réception, stockage et distribution des messages
 ```
 
-Les controllers ne reçoivent jamais de messages applicatifs — ils gèrent uniquement l'état du cluster. Le quorum à 3 tolère la perte d'un controller sans interruption de service.
+Les controllers ne reçoivent jamais de messages applicatifs - ils gèrent uniquement l'état du cluster. Le quorum à 3 tolère la perte d'un controller sans interruption de service.
 
 ---
 
-## Brokers — Stockage et distribution
+## Brokers - Stockage et distribution
 
 Les 3 brokers reçoivent les messages des producteurs et les servent aux consommateurs.
 
@@ -37,7 +37,7 @@ Les 3 brokers reçoivent les messages des producteurs et les servent aux consomm
 Chaque topic est découpé en **partitions** distribuées sur les brokers. Chaque partition a un **leader** (écritures/lectures) et des **replicas** (copies de secours).
 
 ```
-Topic "backend-logs" — 6 partitions, réplication 3
+Topic "backend-logs" - 6 partitions, réplication 3
 ├── Partition 0  ->  leader: broker-1,  replicas: broker-2, broker-3
 ├── Partition 1  ->  leader: broker-2,  replicas: broker-1, broker-3
 ├── Partition 2  ->  leader: broker-3,  replicas: broker-1, broker-2

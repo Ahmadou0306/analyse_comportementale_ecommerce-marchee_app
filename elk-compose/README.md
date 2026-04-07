@@ -1,4 +1,4 @@
-# elk-compose — Stack ELK
+# elk-compose - Stack ELK
 
 Stack complète **Elasticsearch + Logstash + Kibana** pour le stockage, le traitement et la visualisation des logs en temps réel.
 
@@ -6,24 +6,24 @@ Stack complète **Elasticsearch + Logstash + Kibana** pour le stockage, le trait
 
 ## Rôles dans la stack ELK
 
-### Elasticsearch — Moteur de stockage et de recherche
+### Elasticsearch - Moteur de stockage et de recherche
 
 Base de données orientée documents JSON, optimisée pour la recherche full-text et les agrégations sur de gros volumes de données.  
 C'est lui qui stocke tous les logs indexés et répond aux requêtes de Kibana.
 
-### Logstash — Pipeline de traitement
+### Logstash - Pipeline de traitement
 
 Consomme les messages depuis Kafka, les **parse et transforme** (extraction de champs, typage, enrichissement), puis les envoie vers Elasticsearch.  
 Chaque pipeline correspond à un topic Kafka et produit un index ES dédié.
 
-### Kibana — Interface de visualisation
+### Kibana - Interface de visualisation
 
 Se connecte à Elasticsearch pour construire des **dashboards temps réel** : graphiques, tableaux, métriques, alertes.  
 C'est le point d'entrée pour l'analyse comportementale et le monitoring infrastructure.
 
 ---
 
-## Cluster Elasticsearch — Principe des 3 nœuds
+## Cluster Elasticsearch - Principe des 3 nœuds
 
 Les 3 nœuds (`es01`, `es02`, `es03`) forment un **cluster haute disponibilité**.
 
@@ -39,7 +39,7 @@ Les 3 nœuds (`es01`, `es02`, `es03`) forment un **cluster haute disponibilité*
 ```
 
 Chaque nœud est **master eligible** et **data node** simultanément :
-- Un seul nœud est élu **master actif** — il gère les métadonnées du cluster (quels shards sont où, état du cluster)
+- Un seul nœud est élu **master actif** - il gère les métadonnées du cluster (quels shards sont où, état du cluster)
 - Les deux autres sont en **standby** : si le master tombe, une nouvelle élection a lieu automatiquement
 - Les **données** sont réparties et répliquées sur les 3 nœuds
 
@@ -49,9 +49,9 @@ Un index ES est découpé en **shards** (fragments). Chaque shard a des copies a
 
 ```
 Index "logstash-backend-*"
-├── Shard 0  →  primaire sur es01,  replica sur es02
-├── Shard 1  →  primaire sur es02,  replica sur es03
-└── Shard 2  →  primaire sur es03,  replica sur es01
+├── Shard 0  ->  primaire sur es01,  replica sur es02
+├── Shard 1  ->  primaire sur es02,  replica sur es03
+└── Shard 2  ->  primaire sur es03,  replica sur es01
 ```
 
 **Avantages :**

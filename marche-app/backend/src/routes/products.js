@@ -9,7 +9,7 @@ const router = express.Router();
 
 const IMAGES_DIR = path.join(__dirname, '..', '..', 'images');
 
-// Config multer — stockage dans backend/images/uploads/
+// Config multer - stockage dans backend/images/uploads/
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadsDir = path.join(IMAGES_DIR, 'uploads');

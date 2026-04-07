@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-// POST /api/events/cart — reçoit un événement panier depuis le frontend
+// POST /api/events/cart - reçoit un événement panier depuis le frontend
 router.post('/cart', (req, res) => {
   const { event, userId, product, items, subtotal } = req.body;
 

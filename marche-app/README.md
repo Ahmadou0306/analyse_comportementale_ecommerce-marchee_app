@@ -1,4 +1,4 @@
-# marche-app — Application E-commerce (générateur de données)
+# marche-app - Application E-commerce (générateur de données)
 
 Application e-commerce full-stack utilisée comme source de logs pour la pipeline d'observabilité.
 
@@ -45,4 +45,4 @@ docker exec marche_backend npx prisma db seed
 
 ## Accès admin
 
-- Indicatif : `+221` — Téléphone : `810000000` — OTP : `123456`
+- Indicatif : `+221` - Téléphone : `810000000` - OTP : `123456`

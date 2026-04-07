@@ -1,6 +1,6 @@
 metricbeat.modules:
   # ----------------------─
-  # MODULE SYSTEM — Métriques de l'hôte
+  # MODULE SYSTEM - Métriques de l'hôte
   # CPU, RAM, disque, réseau, processus
   # ----------------------─
   - module: system
@@ -23,7 +23,7 @@ metricbeat.modules:
     cpu.metrics: ["percentages", "normalized_percentages"]
 
   # ----------------------─
-  # MODULE DOCKER — Métriques des conteneurs ELK
+  # MODULE DOCKER - Métriques des conteneurs ELK
   # CPU, RAM, réseau de chaque conteneur
   # ----------------------─
   - module: docker
@@ -41,7 +41,7 @@ metricbeat.modules:
     enabled: true
 
 # ----------------------─
-# OUTPUT — Envoi direct vers Elasticsearch
+# OUTPUT - Envoi direct vers Elasticsearch
 # Pas de passage par Kafka pour éviter
 # la dépendance circulaire
 # ----------------------─
@@ -54,7 +54,7 @@ output.elasticsearch:
   index: "metrics-elk-%{+yyyy.MM.dd}"
 
 # ----------------------─
-# DASHBOARDS — Chargement automatique dans Kibana
+# DASHBOARDS - Chargement automatique dans Kibana
 # Servira de référence pour comparer avec
 # les dashboards personnalisés que tu créeras
 # ----------------------─
